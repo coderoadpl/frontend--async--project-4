@@ -9,6 +9,10 @@ class Button {
 
         const button = document.createElement('button')
 
+        button.style.width = '100%'
+        button.style.marginBottom = '16px'
+        button.style.cursor = 'pointer'
+
         button.innerHTML = this.label
 
         button.addEventListener(
