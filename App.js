@@ -38,6 +38,7 @@ class App {
     setUsers(users) {
         console.log('setUsers')
         this.users = users || []
+        this.render()
     }
 
     render() {
@@ -47,6 +48,10 @@ class App {
         }
 
         this.container.innerHTML = ''
+
+        const buttonElement = new Button('Load', () => this.loadUsers())
+
+        this.container.appendChild(buttonElement.render())
 
         this.users.forEach((user) => {
             const userElement = new User(user)
