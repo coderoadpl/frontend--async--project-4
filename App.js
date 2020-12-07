@@ -3,6 +3,8 @@ class App {
     constructor() {
         this.container = null
 
+        this.searchPhrase = ''
+
         this.users = null
         this.isLoading = false
         this.hasError = null
@@ -44,6 +46,11 @@ class App {
         this.render()
     }
 
+    setSearchPhrase(newSearchPhrase) {
+        this.searchPhrase = newSearchPhrase
+        this.render()
+    }
+
     render() {
 
         if (!this.container) {
@@ -53,8 +60,12 @@ class App {
         this.container.innerHTML = ''
 
         const buttonElement = new Button('Load', () => this.loadUsers())
-
         this.container.appendChild(buttonElement.render())
+
+        const inputElement = new Input(this.searchPhrase, (event) => {
+            this.setSearchPhrase(event.target.value)
+        })
+        this.container.appendChild(inputElement.render())
 
         if (this.hasError) {
             const messageElement = new Message('Error ocurred!')
@@ -74,7 +85,21 @@ class App {
             return this.container
         }
 
-        this.users.forEach((user) => {
+        const filteredUsers = this.users
+            .filter((user) => {
+                const name = user.name.first + ' ' + user.name.last
+                const nameLowerCase = name.toLowerCase()
+                const searchPhraseLowerCase = this.searchPhrase.toLowerCase()
+                return nameLowerCase.includes(searchPhraseLowerCase)
+            })
+
+        if (filteredUsers.length === 0) {
+            const messageElement = new Message('No results after filtering!')
+            this.container.appendChild(messageElement.render())
+            return this.container
+        }
+
+        filteredUsers.forEach((user) => {
             const userElement = new User(user)
 
             this.container.appendChild(userElement.render())
